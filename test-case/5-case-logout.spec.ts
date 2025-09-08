@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Login User with incorrect email and password', () => {
+test.describe('Logout User', () => {
 
   test.beforeEach(async ({ page }) => {
     // Go to the starting url before each test.
@@ -21,13 +21,24 @@ test.describe('Login User with incorrect email and password', () => {
     await expect(page.getByText('New User Signup!')).toBeVisible();
   });
 
-  test('Verify that \'Your email or password is incorrect!\' is visible', async ({ page }) => {
+  test('Verify that \'Logged in as username!\' is visible', async ({ page }) => {
     await page.getByText(' Signup / Login').click();
     
     await page.locator('//*[@id="form"]/div/div/div[1]/div/form/input[2]').fill('DevWa01@Develop.com');
-    await page.getByPlaceholder('Password').fill('worng@password');
+    await page.getByPlaceholder('Password').fill('p@ssw0rd');
     await page.getByRole('button', { name: 'Login' }).click();
     
-    await expect(page.getByText('Your email or password is incorrect!')).toBeVisible();
+    await expect(page.getByText('DevWa01')).toBeVisible();
+  });
+
+  test('Verify that user is navigated to login page', async ({ page }) => {
+    await page.getByText(' Signup / Login').click();
+    
+    await page.locator('//*[@id="form"]/div/div/div[1]/div/form/input[2]').fill('DevWa01@Develop.com');
+    await page.getByPlaceholder('Password').fill('p@ssw0rd');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await page.locator('//*[@id="header"]/div/div/div/div[2]/div/ul/li[4]/a/i').click();
+    
+    await expect(page.getByText(' Signup / Login')).toBeVisible();
   });
 });
